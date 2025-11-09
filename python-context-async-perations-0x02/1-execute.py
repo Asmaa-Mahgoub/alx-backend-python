@@ -30,8 +30,6 @@ class ExecuteQuery:
         #Returning False allows Python to re-raise any exceptions
         return False
     
-with ExecuteQuery(age)as eq:
-    cursor=conn.cursor()
-    cursor.execute("SELECT * FROM users WHERE age > ?”)
-    results=cursor.fetchall
-    print results
+# Usage
+with ExecuteQuery("SELECT * FROM users WHERE age > ?", (25,)) as results:
+    print("Query results:", results)
