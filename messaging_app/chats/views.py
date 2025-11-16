@@ -1,7 +1,7 @@
-from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import User, Conversation, Message
 from .serializers import (
     UserSerializer,
@@ -10,17 +10,18 @@ from .serializers import (
     MessageSerializer
 )
 
-# Create your views here.
+
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
-    
-    # Choose serializer dynamically
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['participants__user_id']  # filter by participant user_id
+    ordering_fields = ['created_at']  # allow ordering by creation date
+
     def get_serializer_class(self):
         if self.action == 'create':
             return ConversationCreateSerializer
         return ConversationSerializer
 
-    # Optional: custom endpoint to add a message directly in conversation
     @action(detail=True, methods=['post'])
     def send_message(self, request, pk=None):
         conversation = self.get_object()
@@ -46,17 +47,14 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
         serializer = MessageSerializer(message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['conversation__conversation_id', 'sender__user_id']
+    ordering_fields = ['sent_at']
 
-    # Optional: filter messages by conversation
-    def get_queryset(self):
-        conversation_id = self.request.query_params.get('conversation_id')
-        if conversation_id:
-            return self.queryset.filter(conversation__conversation_id=conversation_id)
-        return self.queryset
     
 
