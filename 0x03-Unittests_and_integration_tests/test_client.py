@@ -19,8 +19,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that GithubOrgClient.org returns the correct value."""
         # Arrange
         client = GithubOrgClient(org_name)
-        expected_return = {"key": "value"}  # dummy return value
-        mock_get_json.return_value = expected_return
+        mock_get_json.return_value = {"payload": True}  # simple dummy value
 
         # Act
         result = client.org()
@@ -29,4 +28,4 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(
             f"https://api.github.com/orgs/{org_name}"
         )
-        self.assertEqual(result, expected_return)
+        self.assertEqual(result, {"payload": True})
