@@ -131,3 +131,5 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",  # Use session auth
     ],
 }
+# messaging_app/settings.py
+AUTH_USER_MODEL = 'chats.User'
