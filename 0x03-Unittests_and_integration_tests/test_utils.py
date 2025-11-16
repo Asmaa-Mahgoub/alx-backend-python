@@ -21,8 +21,6 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map_exception(self, nested_map, path):
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
-            
-###############################################################################
 class TestGetJson(unittest.TestCase):
 
     @parameterized.expand([
@@ -44,8 +42,6 @@ class TestGetJson(unittest.TestCase):
 
             # Ensure get_json returns the payload
             self.assertEqual(result, test_payload)
-
-###############################################################################
 class TestMemoize(unittest.TestCase):
 
     def test_memoize(self):
