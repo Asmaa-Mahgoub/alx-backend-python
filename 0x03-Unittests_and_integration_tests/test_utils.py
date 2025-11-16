@@ -4,6 +4,7 @@ from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, Mock
 
+
 class TestAccessNestedMap(unittest.TestCase):
 
     @parameterized.expand([
@@ -21,6 +22,8 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map_exception(self, nested_map, path):
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
+
+
 class TestGetJson(unittest.TestCase):
 
     @parameterized.expand([
@@ -42,10 +45,13 @@ class TestGetJson(unittest.TestCase):
 
             # Ensure get_json returns the payload
             self.assertEqual(result, test_payload)
+
+
 class TestMemoize(unittest.TestCase):
+    """Test memoize decorator."""
 
     def test_memoize(self):
-        """Test that memoize caches the result and calls the method only once."""
+        """Test memoize caches method result."""
 
         class TestClass:
             def a_method(self):
@@ -57,17 +63,11 @@ class TestMemoize(unittest.TestCase):
 
         obj = TestClass()
 
-        # Patch a_method so we can track how many times it is called
         with patch.object(TestClass, "a_method", return_value=42) as mock_method:
-            # Call a_property twice
             first = obj.a_property
             second = obj.a_property
-
-            # Both calls should return the same cached result
             self.assertEqual(first, 42)
             self.assertEqual(second, 42)
-
-            # a_method should have been called only once
             mock_method.assert_called_once()
 
 if __name__ == "__main__":
