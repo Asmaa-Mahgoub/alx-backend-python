@@ -3,16 +3,16 @@ from rest_framework import viewsets, status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from .models import CustomUser, Message, Conversation
-from .serializers import UserSerializer, MessageSerializer, ConversationSerializer, UserRegisterSerializer
+from .models import User, Message, Conversation
+from .serializers import UserSerializer, MessageSerializer, ConversationSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .permissions import IsMessageOwner, IsParticipantOfConversation
 from .auth import get_tokens_for_user
 from .pagination import MessagePagination
 from .filters import MessageFilter
 
-class UserRegisterAPIView(generics.CreateAPIView):
-    queryset = CustomUser.objects.all()
+""" class UserRegisterAPIView(generics.CreateAPIView):
+    queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
 
     def create(self, request, *args, **kwargs):
@@ -27,11 +27,11 @@ class UserRegisterAPIView(generics.CreateAPIView):
             'tokens': token
         }
 
-        return Response(response_data, status=status.HTTP_201_CREATED)
+        return Response(response_data, status=status.HTTP_201_CREATED) """
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all().order_by('last_name', 'first_name')
+    queryset = User.objects.all().order_by('last_name', 'first_name')
     serializer_class = UserSerializer
 
 

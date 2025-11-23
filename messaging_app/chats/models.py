@@ -12,7 +12,6 @@ class User(AbstractUser):
         ('host', 'Host'),
         ('admin', 'Admin'),
     ]
-
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=150, null=False)
     last_name = models.CharField(max_length=150, null=False)
