@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',''
+    'rest_framework',
     'chats',
-    'rest_framework_simplejwt',
+    "rest_framework_simplejwt",
     'rest_framework_simplejwt.token_blacklist', # if we want token blacklisting (recommended for logout).
 ]
 
@@ -131,9 +131,9 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",  # Require auth by default
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",  # Use session auth
-        'rest_framework.authentication.BasicAuthentication',
+        "rest_framework.authentication.BasicAuthentication",
     ],
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend"
