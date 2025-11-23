@@ -5,34 +5,21 @@ class IsParticipant(permissions.BasePermission):
     Allow access only to conversation participants.
     """
 
-    def has_object_permission(self, request, view, obj):
-        # obj could be Conversation or Message
-        user = request.user
-        if not user or not user.is_authenticated:
-            return False
+    def has_permission(self, request, view):
+        # Global check: Must be authenticated
+        if not request.user or not request.user.is_authenticated:
+            return False  # DRF will return HTTP_403_FORBIDDEN
+        return True
 
-        # If obj is a Conversation
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+
+        # obj could be Conversation
         if hasattr(obj, 'participants'):
             return obj.participants.filter(pk=user.pk).exists()
 
-        # If obj is a Message, check message.conversation participants
+        # obj could be Message → check its conversation participants
         if hasattr(obj, 'conversation'):
             return obj.conversation.participants.filter(pk=user.pk).exists()
 
         return False
-
-class IsMessageOwner(permissions.BasePermission):
-    """
-    Only message sender can update or delete a message.
-    """
-
-    def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated
-
-    def has_object_permission(self, request, view, obj):
-
-        if request.method in ["PUT", "PATCH", "DELETE"]:
-            return obj.sender == request.user
-
-        # Allow read-only methods (GET, HEAD, OPTIONS)
-        return True
