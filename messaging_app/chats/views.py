@@ -9,13 +9,13 @@ from .serializers import (
     ConversationCreateSerializer,
     MessageSerializer
 )
-from .permissions import IsParticipant
+from .permissions import IsParticipant, IsMessageOwner
 from rest_framework.permissions import IsAuthenticated
 
 class ConversationViewSet(viewsets.ModelViewSet):
     #queryset = Conversation.objects.all() This allows any authenticated user to see all conversations, even ones they are NOT part of.
     serializer_class = ConversationSerializer
-    permission_classes = [IsAuthenticated, IsParticipant]
+    permission_classes = [IsParticipant]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['participants__user_id']  # filter by participant user_id
     ordering_fields = ['created_at']  # allow ordering by creation date
@@ -59,7 +59,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     #queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated, IsParticipant]
+    permission_classes = [IsParticipant, IsMessageOwner]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['conversation__conversation_id', 'sender__user_id']
     ordering_fields = ['sent_at']

@@ -20,3 +20,19 @@ class IsParticipant(permissions.BasePermission):
             return obj.conversation.participants.filter(pk=user.pk).exists()
 
         return False
+
+class IsMessageOwner(permissions.BasePermission):
+    """
+    Only message sender can update or delete a message.
+    """
+
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in ["PUT", "PATCH", "DELETE"]:
+            return obj.sender == request.user
+
+        # Allow read-only methods (GET, HEAD, OPTIONS)
+        return True
