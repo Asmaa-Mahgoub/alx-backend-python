@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from .models import Message
+from django.views.decorators.cache import cache_page
+
 
 # Create your views here.
 User = get_user_model()
@@ -62,3 +64,29 @@ def unread_messages_view(request):
     unread_messages = Message.unread.unread_for_user(request.user).only('id', 'content', 'timestamp')
     
     return render(request, 'messaging/unread_messages.html', {'messages': unread_messages})
+
+
+@login_required
+@cache_page(60)  # cache timeout in seconds
+def user_messages(request):
+    """
+    View to fetch messages where the current user is sender or receiver,
+    optimized with select_related/prefetch_related, and cached for 60 seconds.
+    """
+    # Fetch messages where user is sender or receiver
+    messages_qs = (
+        Message.objects.filter(sender=request.user)
+        .select_related('sender', 'receiver')
+        .prefetch_related('replies')
+    )
+
+    messages_received_qs = (
+        Message.objects.filter(receiver=request.user)
+        .select_related('sender', 'receiver')
+        .prefetch_related('replies')
+    )
+
+    all_messages = messages_qs | messages_received_qs
+    all_messages = all_messages.order_by('-timestamp')
+
+    return render(request, 'messaging/user_messages.html', {'messages': all_messages})
