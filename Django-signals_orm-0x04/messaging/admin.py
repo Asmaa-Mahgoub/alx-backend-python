@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Message, Notification
+from .models import Message, Notification, MessageHistory
 # Register your models here.
 
 
@@ -14,3 +14,10 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'actor', 'verb', 'is_read', 'created_at')
     list_filter = ('is_read', 'created_at')
     search_fields = ('user__username', 'actor__username', 'verb')
+
+@admin.register(MessageHistory)
+class MessageHistoryAdmin(admin.ModelAdmin):
+    list_display = ('id', 'message', 'editor', 'created_at')
+    readonly_fields = ('old_content', 'created_at')
+    search_fields = ('message__id', 'editor__username', 'old_content')
+

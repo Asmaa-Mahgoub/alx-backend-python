@@ -28,3 +28,19 @@ class Notification(models.Model):
     def __str__(self):
         return f"Notification for {self.user}: {self.verb}"
     
+
+class MessageHistory(models.Model):
+    """
+    Stores prior versions of a Message (the snapshot before an edit).
+    """
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
+    old_content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    editor = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='edit_histories')
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"History for Message #{self.message_id} at {self.created_at}"
+    
