@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from .managers import UnreadMessagesManager
 # Create your models here.
 
 User = get_user_model()
@@ -17,7 +18,8 @@ class Message(models.Model):
         related_name='replies',
         on_delete=models.CASCADE
     )
-
+    objects = models.Manager()  # default manager
+    unread = UnreadMessagesManager()  # custom manager for unread messages
     def __str__(self):
         return f"Message #{self.pk} from {self.sender.username} to {self.receiver.username}"
 

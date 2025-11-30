@@ -52,3 +52,12 @@ def user_messages(request):
 
     return render(request, 'messaging/user_messages.html', {'messages': all_messages})
 
+
+@login_required
+def unread_messages_view(request):
+    """
+    Display only unread messages for the logged-in user.
+    """
+    unread_messages = Message.unread.for_user(request.user)
+    
+    return render(request, 'messaging/unread_messages.html', {'messages': unread_messages})
