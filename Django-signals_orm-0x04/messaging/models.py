@@ -36,8 +36,15 @@ class MessageHistory(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
     old_content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    editor = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='edit_histories')
-
+    #editor = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='edit_histories')
+    edited_at = models.DateTimeField(auto_now_add=True)
+    edited_by = models.ForeignKey(
+        User,
+        null=True,              # <-- FIX: allows existing rows to have NULL
+        blank=True,             # <-- FIX: form/admin side
+        on_delete=models.SET_NULL,
+        related_name='edited_histories'
+    )
     class Meta:
         ordering = ['-created_at']
 
